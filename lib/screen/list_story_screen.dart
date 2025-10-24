@@ -3,7 +3,9 @@ import 'package:lottie/lottie.dart';
 import 'package:story_app/widget/list_story_item.dart';
 
 class ListStoryScreen extends StatelessWidget {
-  const ListStoryScreen({super.key});
+  final void Function() uploadtap;
+  final void Function() logoutap;
+  const ListStoryScreen({super.key,required this.uploadtap,required this.logoutap});
   @override
   Widget build(BuildContext context) {
     final font = Theme.of(context).textTheme;
@@ -12,6 +14,11 @@ class ListStoryScreen extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
+              automaticallyImplyLeading: false,
+              actions: [
+                IconButton(onPressed: uploadtap, icon: Icon(Icons.upload)),
+                IconButton(onPressed: (){}, icon: Icon(Icons.logout))
+              ],
               expandedHeight: 300,
               pinned: true,
               title: Text("Story", style: font.titleLarge!.copyWith(fontWeight: FontWeight.bold)),

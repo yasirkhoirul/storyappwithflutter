@@ -1,11 +1,25 @@
 import 'package:flutter/material.dart';
-
-import 'package:story_app/screen/upload_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:story_app/data/api/api_auth.dart';
+import 'package:story_app/provider/auth_provider.dart';
+import 'package:story_app/router/myrouter_delegate.dart';
 import 'package:story_app/theme/theme.dart';
 import 'package:story_app/theme/util.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider(create: (context) => Apiauth(),),
+        ChangeNotifierProvider(create: (context) => AuthProvider(apiauth: context.read<Apiauth>()),),
+        ChangeNotifierProvider(
+          create: (context) =>
+              MyrouterDelegate(navigatorkeys: GlobalKey<NavigatorState>(),authprovider: context.read<AuthProvider>()),
+        ),
+      ],
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -18,10 +32,11 @@ class MainApp extends StatelessWidget {
 
     MaterialTheme theme = MaterialTheme(textTheme);
     return MaterialApp(
-      
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
-      // home: LoginScreen(signintap: () {})
-      home: UploadScreen(),
-      );
+      home: Router(
+        routerDelegate: context.read<MyrouterDelegate>(),
+        backButtonDispatcher: RootBackButtonDispatcher(),
+      ),
+    );
   }
 }
