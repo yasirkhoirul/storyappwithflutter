@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_app/data/api/api_auth.dart';
 import 'package:story_app/data/model/modelauth.dart';
@@ -10,17 +9,17 @@ class AuthProvider extends ChangeNotifier {
   String _email = "";
   String _password = "";
   Status status = IsIdle();
- 
-  
+
   AuthProvider({required this.apiauth});
   String get email => _email;
   String get password => _password;
   LoginResult? datalogin;
-  
-  setidlelogin(){
+
+  setidlelogin() {
     status = IsIdle();
     notifyListeners();
   }
+
   setemail(String data) {
     _email = data;
     notifyListeners();
@@ -32,7 +31,6 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future signup(String em, String pw, String ur) async {
-    Logger().d(em);
     status = Isloading();
     notifyListeners();
     try {

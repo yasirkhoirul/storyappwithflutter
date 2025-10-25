@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/web.dart';
 import 'package:provider/provider.dart';
 import 'package:story_app/data/model/modelauth.dart';
 import 'package:story_app/provider/auth_provider.dart';
@@ -22,35 +21,36 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
+  late AuthProvider authProvider;
   @override
   void initState() {
-    final provider = context.read<AuthProvider>();
-    provider.addListener(_onstateschange);
+    authProvider = context.read<AuthProvider>();
+    authProvider.addListener(_onstateschange);
     super.initState();
   }
 
   void _onstateschange() {
-    final state = context.read<AuthProvider>().status;
-    Logger().d("state $state");
+    final state = authProvider.status;
+
     switch (state) {
       case Isloading():
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           if (!context.mounted) return;
           showDialog(
+            barrierDismissible: false,
             useRootNavigator: false,
             context: context,
-            builder: (context) => StatusDialogManager()
+            builder: (context) => StatusDialogManager(),
           );
         });
         break;
       case Isuccesslogin(data: var data):
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          context.read<AuthProvider>().setidlelogin();
+          authProvider.setidlelogin();
           widget.signintap(data);
         });
         break;
       default:
-        
         break;
     }
   }
@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     email.dispose();
     password.dispose();
-    context.read<AuthProvider>().removeListener(_onstateschange);
+    authProvider.removeListener(_onstateschange);
     super.dispose();
   }
 
@@ -137,7 +137,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 await auth.setPassword(password.text);
                                 await auth.login();
                                 await auth.loadDatalogin();
-                                
                               },
                               child: const Text("Signin"),
                             ),

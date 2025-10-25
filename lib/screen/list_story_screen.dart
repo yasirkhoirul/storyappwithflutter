@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:story_app/provider/auth_provider.dart';
 import 'package:story_app/provider/status_provider.dart';
+import 'package:story_app/provider/story_provider.dart';
 import 'package:story_app/widget/list_story_item.dart';
 
-class ListStoryScreen extends StatelessWidget {
+class ListStoryScreen extends StatefulWidget {
   final void Function() uploadtap;
   final void Function() logoutap;
   const ListStoryScreen({
@@ -13,6 +15,21 @@ class ListStoryScreen extends StatelessWidget {
     required this.uploadtap,
     required this.logoutap,
   });
+
+  @override
+  State<ListStoryScreen> createState() => _ListStoryScreenState();
+}
+
+class _ListStoryScreenState extends State<ListStoryScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Logger().d("init diapnggil");
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if(!context.mounted)return;
+      context.read<StoryProvider>().fetchdata();
+    },);
+  }
   @override
   Widget build(BuildContext context) {
     final font = Theme.of(context).textTheme;
@@ -23,11 +40,14 @@ class ListStoryScreen extends StatelessWidget {
             SliverAppBar(
               automaticallyImplyLeading: false,
               actions: [
-                IconButton(onPressed: uploadtap, icon: Icon(Icons.upload)),
-                IconButton(onPressed: () {
-                  logoutap();
-                  context.read<AuthProvider>().status = IsIdle();
-                }, icon: Icon(Icons.logout)),
+                IconButton(onPressed: widget.uploadtap, icon: Icon(Icons.upload)),
+                IconButton(
+                  onPressed: () {
+                    widget.logoutap();
+                    context.read<AuthProvider>().status = IsIdle();
+                  },
+                  icon: Icon(Icons.logout),
+                ),
               ],
               expandedHeight: 300,
               pinned: true,
@@ -50,9 +70,13 @@ class ListStoryScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SliverList.builder(
-              itemCount: 3,
-              itemBuilder: (context, index) => ListStoryItem(),
+            Consumer<StoryProvider>(
+              builder: (context,value,child) {
+                return SliverList.builder(
+                  itemCount: value.datastory?.liststory.length??0,
+                  itemBuilder: (context, index) => ListStoryItem(data: value.datastory!.liststory[index],),
+                );
+              }
             ),
           ],
         ),

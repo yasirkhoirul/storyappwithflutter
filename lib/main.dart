@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:story_app/data/api/api_auth.dart';
+import 'package:story_app/data/api/api_story.dart';
 import 'package:story_app/provider/auth_provider.dart';
+import 'package:story_app/provider/story_provider.dart';
+import 'package:story_app/provider/upload_provider.dart';
 import 'package:story_app/router/myrouter_delegate.dart';
 import 'package:story_app/theme/theme.dart';
 import 'package:story_app/theme/util.dart';
@@ -11,6 +14,7 @@ void main() {
     MultiProvider(
       providers: [
         Provider(create: (context) => Apiauth()),
+        Provider(create: (context) => ApiStory()),
         ChangeNotifierProvider(
           create: (context) => AuthProvider(apiauth: context.read<Apiauth>()),
         ),
@@ -18,6 +22,14 @@ void main() {
           create: (context) => MyrouterDelegate(
             navigatorkeys: GlobalKey<NavigatorState>(),
             authprovider: context.read<AuthProvider>(),
+          ),
+        ),
+
+        ChangeNotifierProvider(create: (context) => UploadProvider()),
+        ChangeNotifierProvider(
+          create: (context) => StoryProvider(
+            apistory: context.read<ApiStory>(),
+            auth: context.read<AuthProvider>(),
           ),
         ),
       ],

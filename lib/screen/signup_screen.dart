@@ -33,12 +33,10 @@ class _SignupScreenState extends State<SignupScreen> {
       if (!context.mounted) return;
       if (state is Isloading) {
         showDialog(
+          barrierDismissible: true,
           context: context,
           builder: (context) => const StatusDialogManager(),
         );
-      }
-      if (state is IsError) {
-        Logger().d(state.message);
       }
     });
   }
@@ -54,7 +52,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     final font = Theme.of(context).textTheme;
     return Consumer<AuthProvider>(
       builder: (context, value, child) {
@@ -110,7 +107,6 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                             ),
                             TextField(
-                              
                               controller: email,
                               decoration: InputDecoration(
                                 label: const Text("email"),
@@ -127,7 +123,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                   onTap: () => setState(() {
                                     hidepassword = !hidepassword;
                                   }),
-                                  child: hidepassword?Icon(Icons.visibility):Icon(Icons.visibility_off) ,
+                                  child: hidepassword
+                                      ? Icon(Icons.visibility)
+                                      : Icon(Icons.visibility_off),
                                 ),
                                 label: const Text("password"),
                                 border: OutlineInputBorder(
@@ -137,9 +135,10 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                             SizedBox(height: 12),
                             OutlinedButton(
-
                               onPressed: () async {
-                                Logger().d("tombol signup ditekan dengan ${email.text}");
+                                Logger().d(
+                                  "tombol signup ditekan dengan ${email.text}",
+                                );
                                 await value.signup(
                                   email.text,
                                   password.text,

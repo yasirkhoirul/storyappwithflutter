@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:logger/web.dart';
-import 'package:provider/provider.dart';
+
 import 'package:story_app/provider/auth_provider.dart';
-import 'package:story_app/provider/status_provider.dart';
+
 import 'package:story_app/screen/list_story_screen.dart';
 import 'package:story_app/screen/login_screen.dart';
 import 'package:story_app/screen/signup_screen.dart';
@@ -25,7 +24,7 @@ class MyrouterDelegate extends RouterDelegate
   bool islogin = false;
   bool gosignup = false;
   bool goupload = false;
-  late bool isalreadylogin;
+  bool isalreadylogin = false;
   List<Page> page = [];
   List<Page> get isalreadylogon => [
     MaterialPage(
@@ -39,7 +38,6 @@ class MyrouterDelegate extends RouterDelegate
           await authprovider.deleteDatalogin();
           isalreadylogin = authprovider.datalogin != null;
           islogin = false;
-          Logger().d(isalreadylogin);
           notifyListeners();
         },
       ),
@@ -48,14 +46,13 @@ class MyrouterDelegate extends RouterDelegate
       MaterialPage(key: ValueKey("upload"), child: UploadScreen()),
   ];
   List<Page> get isnotlogin => [
-    
     MaterialPage(
       key: ValueKey("loginscreen"),
       child: LoginScreen(
         signintap: (data) async {
           islogin = true;
           isalreadylogin = authprovider.datalogin != null;
-          
+
           notifyListeners();
         },
         signuptap: () {
@@ -69,7 +66,6 @@ class MyrouterDelegate extends RouterDelegate
         key: ValueKey("signup"),
         child: SignupScreen(
           tapsignup: () {
-
             notifyListeners();
           },
         ),
@@ -82,8 +78,6 @@ class MyrouterDelegate extends RouterDelegate
     } else {
       page = isnotlogin;
     }
-    Logger().d("page nya ${page.map((e) => e.key)}");
-    Logger().d("go sigup $gosignup");
     return Navigator(
       key: navigatorkeys,
       pages: page,
@@ -94,7 +88,7 @@ class MyrouterDelegate extends RouterDelegate
         }
         if (gosignup == true && page.key == ValueKey("signup")) {
           gosignup = false;
-          Logger().d("ondidremovedipanggil");
+
           notifyListeners();
         }
         if (goupload && page.key == ValueKey("upload")) {

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:story_app/data/model/modelstory.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class ListStoryItem extends StatelessWidget {
-  const ListStoryItem({super.key});
+  final DetailStory data;
+  const ListStoryItem({super.key,required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,7 @@ class ListStoryItem extends StatelessWidget {
                 flex: 6,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Container(color: Colors.red),
+                  child: FadeInImage.memoryNetwork(placeholder: kTransparentImage, image: data.photoUrl,fit: BoxFit.cover,),
                 ),
               ),
               SizedBox(height: 12),
@@ -29,13 +32,15 @@ class ListStoryItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      "Judul",
+                      data.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.fade,
                       style: font.titleLarge!.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.start,
                     ),
-                    Text("deskripsi", style: font.bodyMedium),
+                    Text(data.description, style: font.bodyMedium,maxLines: 3,overflow: TextOverflow.fade,),
                   ],
                 ),
               ),
