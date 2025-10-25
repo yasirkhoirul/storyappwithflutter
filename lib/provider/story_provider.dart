@@ -20,13 +20,14 @@ class StoryProvider extends ChangeNotifier {
       final token = auth.datalogin?.token;
       if (token != null) {
         _data = await apistory.getallStory(token);
+        status = Issuksesmessage(message: "done");
       } else {
         status = IsError("anda belum login");
       }
     } catch (e) {
       Logger().d(e.toString());
       status = IsError(e.toString());
-    }finally{
+    } finally {
       notifyListeners();
     }
   }

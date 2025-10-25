@@ -41,3 +41,17 @@ class DetailStory {
     );
   }
 }
+
+class Modelstorydetail {
+  final bool error;
+  final String message;
+  final DetailStory liststory;
+  const Modelstorydetail(this.error, this.message, this.liststory);
+  factory Modelstorydetail.fromjson(Map<String, dynamic> json) {
+    return Modelstorydetail(
+      json['error'],
+      json['message'],
+      DetailStory.fromjson(json['story']),
+    );
+  }
+}

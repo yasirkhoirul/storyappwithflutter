@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:story_app/data/api/api_auth.dart';
 import 'package:story_app/data/api/api_story.dart';
 import 'package:story_app/provider/auth_provider.dart';
+import 'package:story_app/provider/detail_provider.dart';
 import 'package:story_app/provider/story_provider.dart';
 import 'package:story_app/provider/upload_provider.dart';
 import 'package:story_app/router/myrouter_delegate.dart';
@@ -25,10 +26,21 @@ void main() {
           ),
         ),
 
-        ChangeNotifierProvider(create: (context) => UploadProvider()),
+        ChangeNotifierProvider(
+          create: (context) => UploadProvider(
+            apiStory: context.read<ApiStory>(),
+            auth: context.read<AuthProvider>(),
+          ),
+        ),
         ChangeNotifierProvider(
           create: (context) => StoryProvider(
             apistory: context.read<ApiStory>(),
+            auth: context.read<AuthProvider>(),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => DetailProvider(
+            apidetail: context.read<ApiStory>(),
             auth: context.read<AuthProvider>(),
           ),
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:story_app/provider/auth_provider.dart';
+import 'package:story_app/screen/detail_screen.dart';
 
 import 'package:story_app/screen/list_story_screen.dart';
 import 'package:story_app/screen/login_screen.dart';
@@ -24,12 +25,19 @@ class MyrouterDelegate extends RouterDelegate
   bool islogin = false;
   bool gosignup = false;
   bool goupload = false;
+  bool godetail = false;
+  String? iddetail;
   bool isalreadylogin = false;
   List<Page> page = [];
   List<Page> get isalreadylogon => [
     MaterialPage(
       key: ValueKey("list_story"),
       child: ListStoryScreen(
+        itemtap: (id) {
+          godetail = true;
+          iddetail = id;
+          notifyListeners();
+        },
         uploadtap: () {
           goupload = true;
           notifyListeners();
@@ -44,6 +52,11 @@ class MyrouterDelegate extends RouterDelegate
     ),
     if (goupload == true)
       MaterialPage(key: ValueKey("upload"), child: UploadScreen()),
+    if (godetail == true && iddetail != null)
+      MaterialPage(
+        key: ValueKey("detail"),
+        child: DetailScreen(id: iddetail),
+      ),
   ];
   List<Page> get isnotlogin => [
     MaterialPage(
@@ -93,6 +106,11 @@ class MyrouterDelegate extends RouterDelegate
         }
         if (goupload && page.key == ValueKey("upload")) {
           goupload = false;
+          notifyListeners();
+        }
+        if (godetail && page.key == ValueKey("detail") && iddetail != null) {
+          iddetail != null;
+          godetail = false;
           notifyListeners();
         }
       },
