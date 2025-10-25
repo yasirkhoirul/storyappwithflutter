@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/web.dart';
 import 'package:provider/provider.dart';
 import 'package:story_app/data/model/modelauth.dart';
 import 'package:story_app/provider/auth_provider.dart';
@@ -22,9 +23,43 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   @override
+  void initState() {
+    final provider = context.read<AuthProvider>();
+    provider.addListener(_onstateschange);
+    super.initState();
+  }
+
+  void _onstateschange() {
+    final state = context.read<AuthProvider>().status;
+    Logger().d("state $state");
+    switch (state) {
+      case Isloading():
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          if (!context.mounted) return;
+          showDialog(
+            useRootNavigator: false,
+            context: context,
+            builder: (context) => StatusDialogManager()
+          );
+        });
+        break;
+      case Isuccesslogin(data: var data):
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          context.read<AuthProvider>().setidlelogin();
+          widget.signintap(data);
+        });
+        break;
+      default:
+        
+        break;
+    }
+  }
+
+  @override
   void dispose() {
     email.dispose();
     password.dispose();
+    context.read<AuthProvider>().removeListener(_onstateschange);
     super.dispose();
   }
 
@@ -54,39 +89,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Consumer<AuthProvider>(
                       builder: (context, value, child) {
                         //artinya tutup semua halaman termasuk dialog hingga tersisa paling atas
-                        Navigator.of(
-                          context,
-                          rootNavigator: true,
-                        ).popUntil((route) => route.isFirst);
-                        WidgetsBinding.instance.addPostFrameCallback((
-                          timeStamp,
-                        ) {
-                          switch (value.status) {
-                            case IsError(message: var message):
-                              showDialog(
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (context) =>
-                                    Dialogeror(message: message),
-                              );
-                              break;
-
-                            case Isloading():
-                              showDialog(
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (context) => const Dialogloading(),
-                              );
-                              break;
-
-                            case Isuccesslogin(data: var data):
-                              widget.signintap(data); // panggil fungsi langsung
-                              break;
-
-                            default:
-                              break;
-                          }
-                        });
                         return Column(
                           spacing: 10,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -119,9 +121,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             TextField(
+                              obscureText: true,
                               controller: password,
                               decoration: InputDecoration(
-                                label: const Text("passowrd"),
+                                label: const Text("password"),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -130,11 +133,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(height: 12),
                             OutlinedButton(
                               onPressed: () async {
-                                auth.setemail(email.text);
-                                auth.setPassword(password.text);
-
+                                await auth.setemail(email.text);
+                                await auth.setPassword(password.text);
                                 await auth.login();
                                 await auth.loadDatalogin();
+                                
                               },
                               child: const Text("Signin"),
                             ),

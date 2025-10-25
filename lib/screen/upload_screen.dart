@@ -5,10 +5,13 @@ class UploadScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(elevation: 20,leading: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: const Text("New Story"),
-      )),
+      appBar: AppBar(
+        elevation: 20,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: const Text("New Story"),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(

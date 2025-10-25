@@ -10,11 +10,15 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        Provider(create: (context) => Apiauth(),),
-        ChangeNotifierProvider(create: (context) => AuthProvider(apiauth: context.read<Apiauth>()),),
+        Provider(create: (context) => Apiauth()),
         ChangeNotifierProvider(
-          create: (context) =>
-              MyrouterDelegate(navigatorkeys: GlobalKey<NavigatorState>(),authprovider: context.read<AuthProvider>()),
+          create: (context) => AuthProvider(apiauth: context.read<Apiauth>()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => MyrouterDelegate(
+            navigatorkeys: GlobalKey<NavigatorState>(),
+            authprovider: context.read<AuthProvider>(),
+          ),
         ),
       ],
       child: const MainApp(),

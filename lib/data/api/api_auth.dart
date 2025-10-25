@@ -7,15 +7,36 @@ import 'package:story_app/static/api.dart';
 
 class Apiauth {
   Future<LoginModel> getLogin(String email, String password) async {
-    Logger().d("${RequestLoginModel(email: email, password: password).toMaps()}");
+    Logger().d(
+      "${RequestLoginModel(email: email, password: password).toMaps()}",
+    );
     final url = "${BaseApi.baseurl}/login";
-    final data = await http.post(Uri.parse(url),
-        body: RequestLoginModel(email: email, password: password).toMaps());
+    final data = await http.post(
+      Uri.parse(url),
+      body: RequestLoginModel(email: email, password: password).toMaps(),
+    );
 
-    if (data.statusCode == 200){
+    if (data.statusCode == 200) {
       return LoginModel.fromjson(jsonDecode(data.body));
-    }else{
+    } else {
       throw Exception(LoginModel.fromjson(jsonDecode(data.body)).message);
+    }
+  }
+
+  Future<Modelsignup> getSignup(
+    String name,
+    String email,
+    String password,
+  ) async {
+    final String url = "${BaseApi.baseurl}/register";
+    final data = await http.post(
+      Uri.parse(url),
+      body: RequesSignup(name: name, email: email, password: password).tomap(),
+    );
+    if (data.statusCode == 201) {
+      return Modelsignup.fromjson(jsonDecode(data.body));
+    } else {
+      throw Exception(Modelsignup.fromjson(jsonDecode(data.body)).message);
     }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ListStoryItem extends  StatelessWidget{
+class ListStoryItem extends StatelessWidget {
   const ListStoryItem({super.key});
 
   @override
@@ -10,10 +10,7 @@ class ListStoryItem extends  StatelessWidget{
       elevation: 20,
       margin: EdgeInsets.all(20),
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: 400,
-          maxHeight: 500
-        ),
+        constraints: BoxConstraints(minHeight: 400, maxHeight: 500),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
@@ -23,19 +20,25 @@ class ListStoryItem extends  StatelessWidget{
                 flex: 6,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    color: Colors.red,
-                  ),
+                  child: Container(color: Colors.red),
                 ),
               ),
-              SizedBox(height: 12,),
-              Expanded(child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text("Judul",style: font.titleLarge!.copyWith(fontWeight: FontWeight.bold),textAlign: TextAlign.start,),
-                  Text("deskripsi",style: font.bodyMedium,)
-                ],
-              ))
+              SizedBox(height: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      "Judul",
+                      style: font.titleLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.start,
+                    ),
+                    Text("deskripsi", style: font.bodyMedium),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

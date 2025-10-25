@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/web.dart';
 import 'package:provider/provider.dart';
 import 'package:story_app/provider/auth_provider.dart';
 import 'package:story_app/provider/status_provider.dart';
@@ -26,75 +27,80 @@ class MyrouterDelegate extends RouterDelegate
   bool goupload = false;
   late bool isalreadylogin;
   List<Page> page = [];
+  List<Page> get isalreadylogon => [
+    MaterialPage(
+      key: ValueKey("list_story"),
+      child: ListStoryScreen(
+        uploadtap: () {
+          goupload = true;
+          notifyListeners();
+        },
+        logoutap: () async {
+          await authprovider.deleteDatalogin();
+          isalreadylogin = authprovider.datalogin != null;
+          islogin = false;
+          Logger().d(isalreadylogin);
+          notifyListeners();
+        },
+      ),
+    ),
+    if (goupload == true)
+      MaterialPage(key: ValueKey("upload"), child: UploadScreen()),
+  ];
+  List<Page> get isnotlogin => [
+    
+    MaterialPage(
+      key: ValueKey("loginscreen"),
+      child: LoginScreen(
+        signintap: (data) async {
+          islogin = true;
+          isalreadylogin = authprovider.datalogin != null;
+          
+          notifyListeners();
+        },
+        signuptap: () {
+          gosignup = true;
+          notifyListeners();
+        },
+      ),
+    ),
+    if (gosignup == true)
+      MaterialPage(
+        key: ValueKey("signup"),
+        child: SignupScreen(
+          tapsignup: () {
+
+            notifyListeners();
+          },
+        ),
+      ),
+  ];
   @override
   Widget build(BuildContext context) {
     if (isalreadylogin) {
-      page = [
-        MaterialPage(
-          key: ValueKey("list_story"),
-          child: ListStoryScreen(
-            uploadtap: () {
-              goupload = true;
-              
-              notifyListeners();
-            },
-            logoutap: () async{
-              await authprovider.deleteDatalogin();
-              isalreadylogin = authprovider.datalogin != null;
-              if(!context.mounted)return;
-              context.read<AuthProvider>().status = IsIdle();
-              islogin = false;
-              notifyListeners();
-            },
-          ),
-        ),
-        if (goupload == true)
-          MaterialPage(key: ValueKey("upload"), child: UploadScreen()),
-      ];
-    }else{
-      page = [
-        MaterialPage(
-          key: ValueKey("loginscreen"),
-          child: LoginScreen(
-            signintap: (data) async{
-              islogin = true;
-              isalreadylogin = authprovider.datalogin != null;
-              if(!context.mounted) return;
-              context.read<AuthProvider>().status = IsIdle();
-              notifyListeners();
-            },
-            signuptap: () {
-              gosignup = true;
-              notifyListeners();
-            },
-          ),
-        ),
-        if (gosignup == true)
-          MaterialPage(
-            key: ValueKey("signup"),
-            child: SignupScreen(
-              tapsignup: () {
-                gosignup = false;
-                notifyListeners();
-              },
-            ),
-          ),
-      ];
+      page = isalreadylogon;
+    } else {
+      page = isnotlogin;
     }
+    Logger().d("page nya ${page.map((e) => e.key)}");
+    Logger().d("go sigup $gosignup");
     return Navigator(
       key: navigatorkeys,
       pages: page,
       onDidRemovePage: (page) {
         if (islogin && page.key == ValueKey("loginscreen")) {
           islogin = false;
+          notifyListeners();
         }
-        if (gosignup && page.key == ValueKey("signup")) {
+        if (gosignup == true && page.key == ValueKey("signup")) {
           gosignup = false;
+          Logger().d("ondidremovedipanggil");
+          notifyListeners();
         }
         if (goupload && page.key == ValueKey("upload")) {
           goupload = false;
+          notifyListeners();
         }
-        notifyListeners();
       },
     );
   }

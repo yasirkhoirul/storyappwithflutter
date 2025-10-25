@@ -1,3 +1,3 @@
-class BaseApi{
-  static const  String baseurl = "https://story-api.dicoding.dev/v1";
+class BaseApi {
+  static const String baseurl = "https://story-api.dicoding.dev/v1";
 }
