@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/web.dart';
 
 import 'package:story_app/provider/auth_provider.dart';
 import 'package:story_app/screen/detail_screen.dart';
@@ -65,7 +66,6 @@ class MyrouterDelegate extends RouterDelegate
         signintap: (data) async {
           islogin = true;
           isalreadylogin = authprovider.datalogin != null;
-
           notifyListeners();
         },
         signuptap: () {
@@ -79,6 +79,14 @@ class MyrouterDelegate extends RouterDelegate
         key: ValueKey("signup"),
         child: SignupScreen(
           tapsignup: () {
+            notifyListeners();
+          },
+          gosignin: ()async{
+            Logger().d("masuk gosignin");
+            islogin = true;
+            await authprovider.loadDatalogin();
+            isalreadylogin = authprovider.datalogin != null;
+            Logger().d("data lginnya $isalreadylogin");
             notifyListeners();
           },
         ),

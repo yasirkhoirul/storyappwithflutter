@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:story_app/provider/status_provider.dart';
+import 'package:story_app/provider/story_provider.dart';
 import 'package:story_app/provider/upload_provider.dart';
 
 class UploadScreen extends StatefulWidget {
@@ -54,7 +55,8 @@ class _UploadScreenState extends State<UploadScreen> {
                       content: Text(data.message),
                       actions: [
                         TextButton(
-                          onPressed: () {
+                          onPressed: () async{
+                            context.read<StoryProvider>().fetchdata();
                             values.setidle();
                           },
                           child: const Text("ok"),
@@ -139,7 +141,7 @@ class _UploadScreenState extends State<UploadScreen> {
                             ),
                           ),
                           OutlinedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               context.read<UploadProvider>().uploadfile();
                             },
                             child: const Text("Upload"),

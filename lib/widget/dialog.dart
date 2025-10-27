@@ -10,9 +10,7 @@ class StatusDialogManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<AuthProvider>().status;
-    Logger().d("dialog state = $state");
     if (state is IsIdle) {
-      Logger().d("dialog pop");
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.of(context).pop();
       });
@@ -40,14 +38,7 @@ class StatusDialogManager extends StatelessWidget {
         ),
         icon: Icon(Icons.check),
         content: const Text('Proses berhasil diselesaikan.'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              context.read<AuthProvider>().setidlelogin();
-            },
-            child: const Text('OK'),
-          ),
-        ],
+        
       );
     }
 

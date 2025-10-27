@@ -10,7 +10,7 @@ class ApiStory {
   Future<Modelstory> getallStory(String token) async {
     Logger().d("getallstory");
     final String url = BaseApi.baseurl;
-    final Map<String, String> queryparams = {"location": "1"};
+    final Map<String, String> queryparams = {"location": "0"};
 
     final baseuri = Uri.parse(url);
     final Uri uri = baseuri.replace(
@@ -22,7 +22,7 @@ class ApiStory {
       uri,
       headers: {'Authorization': 'Bearer $token'},
     );
-    Logger().d("getallstory respon $respon");
+    Logger().d("getallstory respon ${respon.body}");
     if (respon.statusCode == 200) {
       return Modelstory.fromjson(jsonDecode(respon.body));
     } else {

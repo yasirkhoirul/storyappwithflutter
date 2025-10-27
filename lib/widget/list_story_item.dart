@@ -42,20 +42,24 @@ class ListStoryItem extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
-                        data.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.fade,
-                        style: font.titleLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
+                      Flexible(
+                        child: Text(
+                          data.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          style: font.titleLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.start,
                         ),
-                        textAlign: TextAlign.start,
                       ),
-                      Text(
-                        data.description,
-                        style: font.bodyMedium,
-                        maxLines: 3,
-                        overflow: TextOverflow.fade,
+                      Flexible(
+                        child: Text(
+                          data.description,
+                          style: font.bodyMedium,
+                          maxLines: 3,
+                          overflow: TextOverflow.fade,
+                        ),
                       ),
                     ],
                   ),

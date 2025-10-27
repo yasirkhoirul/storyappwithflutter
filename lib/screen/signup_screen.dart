@@ -7,7 +7,8 @@ import 'package:story_app/widget/dialog.dart';
 
 class SignupScreen extends StatefulWidget {
   final void Function() tapsignup;
-  const SignupScreen({super.key, required this.tapsignup});
+  final void Function() gosignin;
+  const SignupScreen({super.key, required this.tapsignup, required this.gosignin});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -33,10 +34,14 @@ class _SignupScreenState extends State<SignupScreen> {
       if (!context.mounted) return;
       if (state is Isloading) {
         showDialog(
-          barrierDismissible: true,
+          barrierDismissible: false,
           context: context,
           builder: (context) => const StatusDialogManager(),
         );
+      }
+      if (state is Isuksessignup){
+        widget.gosignin();
+        context.read<AuthProvider>().setidlelogin();
       }
     });
   }

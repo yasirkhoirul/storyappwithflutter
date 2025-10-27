@@ -18,8 +18,8 @@ class DetailStory {
   final String description;
   final String photoUrl;
   final String createdAt;
-  final double lat;
-  final double long;
+  final double? lat;
+  final double? long;
   const DetailStory(
     this.id,
     this.name,
@@ -36,8 +36,9 @@ class DetailStory {
       json['description'],
       json['photoUrl'],
       json['createdAt'],
-      (json['lat'] as num).toDouble(),
-      (json['lon'] as num).toDouble(),
+      json['lat']!=null?(json['lat'] as num).toDouble():json['lat'],
+      json['lon']!=null?(json['lon'] as num).toDouble():json['lon'],
+      
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:logger/web.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:story_app/data/api/api_auth.dart';
 import 'package:story_app/data/model/modelauth.dart';
@@ -31,6 +32,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future signup(String em, String pw, String ur) async {
+    Logger().d(em);
     status = Isloading();
     notifyListeners();
     try {
@@ -38,6 +40,9 @@ class AuthProvider extends ChangeNotifier {
       if (respon.error) {
         status = IsError(respon.message);
       } else {
+        _email = em;
+        _password = pw;
+        await login();
         status = Isuksessignup(respon);
       }
     } catch (e) {
@@ -73,12 +78,13 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future loadDatalogin() async {
+    Logger().d("load data dipanggil");
     final prefs = await SharedPreferences.getInstance();
 
     final userId = prefs.getString("userId");
     final name = prefs.getString("name");
     final token = prefs.getString("token");
-
+    Logger().d("load data dipanggildatanya $userId $name");
     if (userId == null || name == null || token == null) {
       datalogin = null;
     } else {
