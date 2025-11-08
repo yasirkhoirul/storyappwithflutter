@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:logger/web.dart';
 import 'package:story_app/data/api/api_story.dart';
@@ -24,7 +26,10 @@ class StoryProvider extends ChangeNotifier {
       } else {
         status = IsError("anda belum login");
       }
-    } catch (e) {
+    }on SocketException{
+      status = IsError("Maaf tidak internet");
+    }
+     catch (e) {
       Logger().d(e.toString());
       status = IsError(e.toString());
     } finally {

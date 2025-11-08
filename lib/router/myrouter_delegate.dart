@@ -6,6 +6,7 @@ import 'package:story_app/screen/detail_screen.dart';
 
 import 'package:story_app/screen/list_story_screen.dart';
 import 'package:story_app/screen/login_screen.dart';
+import 'package:story_app/screen/mapscreen.dart';
 import 'package:story_app/screen/signup_screen.dart';
 import 'package:story_app/screen/upload_screen.dart';
 
@@ -27,6 +28,7 @@ class MyrouterDelegate extends RouterDelegate
   bool gosignup = false;
   bool goupload = false;
   bool godetail = false;
+  bool gomap = false;
   String? iddetail;
   bool isalreadylogin = false;
   List<Page> page = [];
@@ -49,15 +51,32 @@ class MyrouterDelegate extends RouterDelegate
           islogin = false;
           notifyListeners();
         },
+        
       ),
     ),
     if (goupload == true)
-      MaterialPage(key: ValueKey("upload"), child: UploadScreen()),
+      MaterialPage(key: ValueKey("upload"), child: UploadScreen(
+        onMap: (){
+          gomap = true;
+          notifyListeners();
+        },
+        onbacktomain: () {
+          goupload = false;
+          notifyListeners();
+        },
+      )),
     if (godetail == true && iddetail != null)
       MaterialPage(
         key: ValueKey("detail"),
         child: DetailScreen(id: iddetail),
       ),
+    if (gomap == true) 
+      MaterialPage(
+        child: Mapscreen(onconfirm: () { 
+          gomap = false;
+          notifyListeners();
+         },),
+        key: ValueKey("maps")),
   ];
   List<Page> get isnotlogin => [
     MaterialPage(
@@ -81,7 +100,7 @@ class MyrouterDelegate extends RouterDelegate
           tapsignup: () {
             notifyListeners();
           },
-          gosignin: ()async{
+          gosignin: () async {
             Logger().d("masuk gosignin");
             islogin = true;
             await authprovider.loadDatalogin();
@@ -119,6 +138,10 @@ class MyrouterDelegate extends RouterDelegate
         if (godetail && page.key == ValueKey("detail") && iddetail != null) {
           iddetail != null;
           godetail = false;
+          notifyListeners();
+        }
+        if (gomap == true && page.key == ValueKey("maps")) {
+          gomap = false;
           notifyListeners();
         }
       },

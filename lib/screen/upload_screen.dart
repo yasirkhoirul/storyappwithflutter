@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:story_app/provider/maps_provider.dart';
 import 'package:story_app/provider/status_provider.dart';
 import 'package:story_app/provider/story_provider.dart';
 import 'package:story_app/provider/upload_provider.dart';
 
 class UploadScreen extends StatefulWidget {
-  const UploadScreen({super.key});
+  final Function() onbacktomain;
+  final Function() onMap;
+  const UploadScreen({super.key, required this.onMap, required this.onbacktomain});
 
   @override
   State<UploadScreen> createState() => _UploadScreenState();
@@ -33,6 +36,7 @@ class _UploadScreenState extends State<UploadScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final maps = context.read<MapsProvider>();
     return Scaffold(
       appBar: AppBar(
         elevation: 20,
@@ -55,9 +59,10 @@ class _UploadScreenState extends State<UploadScreen> {
                       content: Text(data.message),
                       actions: [
                         TextButton(
-                          onPressed: () async{
+                          onPressed: () async {
                             context.read<StoryProvider>().fetchdata();
                             values.setidle();
+                            widget.onbacktomain();
                           },
                           child: const Text("ok"),
                         ),
@@ -141,8 +146,29 @@ class _UploadScreenState extends State<UploadScreen> {
                             ),
                           ),
                           OutlinedButton(
+                            onPressed: widget.onMap,
+                            child: const Text("Pilih Lokasi"),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: maps.saddress.isEmpty
+                                    ? Text(
+                                        "Tidak ada lokasi dipilih",
+                                        textAlign: TextAlign.center,
+                                      )
+                                    : Text(
+                                        "Lokasi dipilih : ${maps.saddress}",
+                                        textAlign: TextAlign.center,
+                                      ),
+                              ),
+                            ],
+                          ),
+                          OutlinedButton(
                             onPressed: () async {
-                              context.read<UploadProvider>().uploadfile();
+                              context.read<UploadProvider>().uploadfile(maps.latlangs);
                             },
                             child: const Text("Upload"),
                           ),

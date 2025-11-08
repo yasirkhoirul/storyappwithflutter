@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:story_app/data/api/api_auth.dart';
 import 'package:story_app/data/api/api_story.dart';
 import 'package:story_app/provider/auth_provider.dart';
 import 'package:story_app/provider/detail_provider.dart';
+import 'package:story_app/provider/maps_provider.dart';
 import 'package:story_app/provider/story_provider.dart';
 import 'package:story_app/provider/upload_provider.dart';
 import 'package:story_app/router/myrouter_delegate.dart';
@@ -44,6 +46,7 @@ void main() {
             auth: context.read<AuthProvider>(),
           ),
         ),
+        ChangeNotifierProvider(create: (context) => MapsProvider(Location())  ,)
       ],
       child: const MainApp(),
     ),

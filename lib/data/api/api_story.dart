@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:story_app/data/model/modelstory.dart';
 import 'package:story_app/data/model/modelupload.dart';
@@ -35,6 +36,7 @@ class ApiStory {
     String filename,
     String description,
     String token,
+    LatLng? latlang,
   ) async {
     final baseuri = Uri.parse("${BaseApi.baseurl}/stories");
     var request = http.MultipartRequest("POST", baseuri);
@@ -44,11 +46,12 @@ class ApiStory {
       byte,
       filename: filename,
     );
-    final Map<String, String> field = {'description': description};
+    request.fields['description'] = description;
+    if (latlang != null) request.fields['lat'] = latlang.latitude.toString();
+    if (latlang != null) request.fields['lon'] = latlang.longitude.toString();
     final Map<String, String> headers = {"Authorization": "Bearer $token"};
 
     request.files.add(multipart);
-    request.fields.addAll(field);
     request.headers.addAll(headers);
 
     final stremresponse = await request.send();

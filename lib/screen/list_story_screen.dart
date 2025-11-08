@@ -8,6 +8,7 @@ import 'package:story_app/provider/story_provider.dart';
 import 'package:story_app/widget/list_story_item.dart';
 
 class ListStoryScreen extends StatefulWidget {
+  
   final void Function() uploadtap;
   final void Function() logoutap;
   final Function(String id) itemtap;
@@ -16,6 +17,7 @@ class ListStoryScreen extends StatefulWidget {
     required this.uploadtap,
     required this.logoutap,
     required this.itemtap,
+    
   });
 
   @override
@@ -49,6 +51,7 @@ class _ListStoryScreenState extends State<ListStoryScreen> {
               SliverAppBar(
                 automaticallyImplyLeading: false,
                 actions: [
+                  
                   IconButton(
                     onPressed: widget.uploadtap,
                     icon: Icon(Icons.upload),

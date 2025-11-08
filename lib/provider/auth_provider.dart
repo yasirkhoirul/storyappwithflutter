@@ -10,7 +10,6 @@ class AuthProvider extends ChangeNotifier {
   String _email = "";
   String _password = "";
   Status status = IsIdle();
-
   AuthProvider({required this.apiauth});
   String get email => _email;
   String get password => _password;

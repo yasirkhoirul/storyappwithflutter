@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:story_app/data/api/api_story.dart';
@@ -38,7 +39,7 @@ class UploadProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  uploadfile() async {
+  uploadfile(LatLng? latlang) async {
     status = Isloading();
     notifyListeners();
     try {
@@ -52,6 +53,7 @@ class UploadProvider extends ChangeNotifier {
           fileimages!.name,
           description,
           auth.datalogin!.token,
+          latlang
         );
         status = Isuksesupload(respons);
       }
