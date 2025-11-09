@@ -11,25 +11,48 @@ class StoryProvider extends ChangeNotifier {
   final ApiStory apistory;
   final AuthProvider auth;
   StoryProvider({required this.apistory, required this.auth});
+  int? _pageitemlist = 1;
+  int? get pageitemlist => _pageitemlist;
+  final int _sizelist = 3;
+  int get sizelist => _sizelist;
+
   Modelstory? _data;
   Modelstory? get datastory => _data;
+
   Status status = IsIdle();
-  Future fetchdata() async {
-    Logger().d("fetchdatadijalankan");
-    status = Isloading();
+
+  setPageItemone(){
+    _pageitemlist = 1;
     notifyListeners();
+  }
+
+  Future fetchdata() async {
+    Logger().d("fetchdatadijalankan  dengan $_pageitemlist");
+    if (pageitemlist == 1) {
+      status = Isloading();
+      notifyListeners();
+    }
     try {
       final token = auth.datalogin?.token;
       if (token != null) {
-        _data = await apistory.getallStory(token);
+        if (pageitemlist == 1) {
+          _data = await apistory.getallStory(token, pageitemlist!, sizelist);
+        } else {
+          final listbaru = await apistory.getallStory(
+            token,
+            pageitemlist!,
+            sizelist,
+          );
+          _data!.liststory.addAll(listbaru.liststory);
+        }
+        _pageitemlist = _pageitemlist! + 1;
         status = Issuksesmessage(message: "done");
       } else {
         status = IsError("anda belum login");
       }
-    }on SocketException{
+    } on SocketException {
       status = IsError("Maaf tidak internet");
-    }
-     catch (e) {
+    } catch (e) {
       Logger().d(e.toString());
       status = IsError(e.toString());
     } finally {

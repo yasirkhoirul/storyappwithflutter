@@ -51,32 +51,37 @@ class MyrouterDelegate extends RouterDelegate
           islogin = false;
           notifyListeners();
         },
-        
       ),
     ),
     if (goupload == true)
-      MaterialPage(key: ValueKey("upload"), child: UploadScreen(
-        onMap: (){
-          gomap = true;
-          notifyListeners();
-        },
-        onbacktomain: () {
-          goupload = false;
-          notifyListeners();
-        },
-      )),
+      MaterialPage(
+        key: ValueKey("upload"),
+        child: UploadScreen(
+          onMap: () {
+            gomap = true;
+            notifyListeners();
+          },
+          onbacktomain: () {
+            goupload = false;
+            notifyListeners();
+          },
+        ),
+      ),
     if (godetail == true && iddetail != null)
       MaterialPage(
         key: ValueKey("detail"),
         child: DetailScreen(id: iddetail),
       ),
-    if (gomap == true) 
+    if (gomap == true)
       MaterialPage(
-        child: Mapscreen(onconfirm: () { 
-          gomap = false;
-          notifyListeners();
-         },),
-        key: ValueKey("maps")),
+        child: Mapscreen(
+          onconfirm: () {
+            gomap = false;
+            notifyListeners();
+          },
+        ),
+        key: ValueKey("maps"),
+      ),
   ];
   List<Page> get isnotlogin => [
     MaterialPage(

@@ -37,7 +37,6 @@ class StatusDialogManager extends StatelessWidget {
         ),
         icon: Icon(Icons.check),
         content: const Text('Proses berhasil diselesaikan.'),
-        
       );
     }
 

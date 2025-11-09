@@ -8,7 +8,6 @@ import 'package:story_app/provider/story_provider.dart';
 import 'package:story_app/widget/list_story_item.dart';
 
 class ListStoryScreen extends StatefulWidget {
-  
   final void Function() uploadtap;
   final void Function() logoutap;
   final Function(String id) itemtap;
@@ -17,26 +16,48 @@ class ListStoryScreen extends StatefulWidget {
     required this.uploadtap,
     required this.logoutap,
     required this.itemtap,
-    
   });
 
   @override
   State<ListStoryScreen> createState() => _ListStoryScreenState();
 }
 
-class _ListStoryScreenState extends State<ListStoryScreen> {
+class _ListStoryScreenState extends State<ListStoryScreen> with RouteAware{
+  final ScrollController scrollcontroller = ScrollController();
+  @override
+  void dispose() {
+    scrollcontroller.dispose();
+    super.dispose();
+  }
+  
+
   @override
   void initState() {
     super.initState();
     Logger().d("init diapnggil");
+    scrollcontroller.addListener(() {
+      final maxscroll = scrollcontroller.position.maxScrollExtent;
+
+      final isbottoms = scrollcontroller.position.pixels >= maxscroll;
+
+      if (isbottoms) {
+        Logger().d("sudah sampai bawah");
+        if (context.read<StoryProvider>().pageitemlist == null) return;
+        context.read<StoryProvider>().fetchdata();
+      }
+    });
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!context.mounted) return;
-      context.read<StoryProvider>().fetchdata();
+      final storyprovider = context.read<StoryProvider>();
+      storyprovider.setPageItemone();
+      storyprovider.fetchdata();
     });
   }
 
   Future<void> onrefresh() async {
-    await context.read<StoryProvider>().fetchdata();
+    final storyprovider = context.read<StoryProvider>();
+    storyprovider.setPageItemone();
+    await storyprovider.fetchdata();
   }
 
   @override
@@ -47,11 +68,11 @@ class _ListStoryScreenState extends State<ListStoryScreen> {
         child: RefreshIndicator(
           onRefresh: onrefresh,
           child: CustomScrollView(
+            controller: scrollcontroller,
             slivers: [
               SliverAppBar(
                 automaticallyImplyLeading: false,
                 actions: [
-                  
                   IconButton(
                     onPressed: widget.uploadtap,
                     icon: Icon(Icons.upload),
@@ -95,13 +116,26 @@ class _ListStoryScreenState extends State<ListStoryScreen> {
                       child: Center(child: Text(message)),
                     ),
                     Issuksesmessage() => SliverList.builder(
-                      itemCount: value.datastory?.liststory.length ?? 0,
-                      itemBuilder: (context, index) => ListStoryItem(
-                        data: value.datastory!.liststory[index],
-                        onitemtap: (id) {
-                          widget.itemtap(id);
-                        },
-                      ),
+                      itemCount:
+                          value.datastory!.liststory.length +
+                          ((value.pageitemlist != null) ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (index == value.datastory!.liststory.length &&
+                            value.pageitemlist != null) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(8),
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                        return ListStoryItem(
+                          data: value.datastory!.liststory[index],
+                          onitemtap: (id) {
+                            widget.itemtap(id);
+                          },
+                        );
+                      },
                     ),
                     _ => SliverToBoxAdapter(child: Container()),
                   };

@@ -13,7 +13,11 @@ import 'package:story_app/provider/upload_provider.dart';
 class UploadScreen extends StatefulWidget {
   final Function() onbacktomain;
   final Function() onMap;
-  const UploadScreen({super.key, required this.onMap, required this.onbacktomain});
+  const UploadScreen({
+    super.key,
+    required this.onMap,
+    required this.onbacktomain,
+  });
 
   @override
   State<UploadScreen> createState() => _UploadScreenState();
@@ -60,6 +64,7 @@ class _UploadScreenState extends State<UploadScreen> {
                       actions: [
                         TextButton(
                           onPressed: () async {
+                            context.read<StoryProvider>().setPageItemone();
                             context.read<StoryProvider>().fetchdata();
                             values.setidle();
                             widget.onbacktomain();
@@ -168,7 +173,9 @@ class _UploadScreenState extends State<UploadScreen> {
                           ),
                           OutlinedButton(
                             onPressed: () async {
-                              context.read<UploadProvider>().uploadfile(maps.latlangs);
+                              context.read<UploadProvider>().uploadfile(
+                                maps.latlangs,
+                              );
                             },
                             child: const Text("Upload"),
                           ),

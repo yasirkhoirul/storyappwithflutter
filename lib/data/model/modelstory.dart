@@ -1,17 +1,18 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'modelstory.g.dart';
+
+@JsonSerializable()
 class Modelstory {
   final bool error;
   final String message;
   final List<DetailStory> liststory;
   const Modelstory(this.error, this.message, this.liststory);
-  factory Modelstory.fromjson(Map<String, dynamic> json) {
-    return Modelstory(
-      json['error'],
-      json['message'],
-      (json['listStory'] as List).map((e) => DetailStory.fromjson(e)).toList(),
-    );
-  }
+  factory Modelstory.fromJson(Map<String, dynamic> json) =>
+      _$ModelstoryFromJson(json);
 }
 
+@JsonSerializable()
 class DetailStory {
   final String id;
   final String name;
@@ -29,30 +30,16 @@ class DetailStory {
     this.lat,
     this.long,
   );
-  factory DetailStory.fromjson(Map<String, dynamic> json) {
-    return DetailStory(
-      json['id'],
-      json['name'],
-      json['description'],
-      json['photoUrl'],
-      json['createdAt'],
-      json['lat']!=null?(json['lat'] as num).toDouble():json['lat'],
-      json['lon']!=null?(json['lon'] as num).toDouble():json['lon'],
-      
-    );
-  }
+  factory DetailStory.fromJson(Map<String, dynamic> json) =>
+      _$DetailStoryFromJson(json);
 }
 
+@JsonSerializable()
 class Modelstorydetail {
   final bool error;
   final String message;
   final DetailStory liststory;
   const Modelstorydetail(this.error, this.message, this.liststory);
-  factory Modelstorydetail.fromjson(Map<String, dynamic> json) {
-    return Modelstorydetail(
-      json['error'],
-      json['message'],
-      DetailStory.fromjson(json['story']),
-    );
-  }
+  factory Modelstorydetail.fromJson(Map<String, dynamic> json) =>
+      _$ModelstorydetailFromJson(json);
 }

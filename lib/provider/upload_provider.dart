@@ -53,7 +53,7 @@ class UploadProvider extends ChangeNotifier {
           fileimages!.name,
           description,
           auth.datalogin!.token,
-          latlang
+          latlang,
         );
         status = Isuksesupload(respons);
       }

@@ -8,10 +8,14 @@ import 'package:story_app/static/api.dart';
 import 'package:http/http.dart' as http;
 
 class ApiStory {
-  Future<Modelstory> getallStory(String token) async {
+  Future<Modelstory> getallStory(String token, int page, int size) async {
     Logger().d("getallstory");
     final String url = BaseApi.baseurl;
-    final Map<String, String> queryparams = {"location": "0"};
+    final Map<String, String> queryparams = {
+      "location": "0",
+      "page": "$page",
+      "size": "$size",
+    };
 
     final baseuri = Uri.parse(url);
     final Uri uri = baseuri.replace(
@@ -25,9 +29,9 @@ class ApiStory {
     );
     Logger().d("getallstory respon ${respon.body}");
     if (respon.statusCode == 200) {
-      return Modelstory.fromjson(jsonDecode(respon.body));
+      return Modelstory.fromJson(jsonDecode(respon.body));
     } else {
-      throw Exception(Modelstory.fromjson(jsonDecode(respon.body)).message);
+      throw Exception(Modelstory.fromJson(jsonDecode(respon.body)).message);
     }
   }
 
@@ -57,9 +61,9 @@ class ApiStory {
     final stremresponse = await request.send();
     final response = await http.Response.fromStream(stremresponse);
     if (response.statusCode == 201) {
-      return Modelupload.fromjson(jsonDecode(response.body));
+      return Modelupload.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception(Modelupload.fromjson(jsonDecode(response.body)).message);
+      throw Exception(Modelupload.fromJson(jsonDecode(response.body)).message);
     }
   }
 
@@ -70,12 +74,12 @@ class ApiStory {
       uri,
       headers: {'Authorization': 'Bearer $token'},
     );
-    Logger().d("getdetail respon $respon");
+    Logger().d("getdetail respon ${respon.body}");
     if (respon.statusCode == 200) {
-      return Modelstorydetail.fromjson(jsonDecode(respon.body));
+      return Modelstorydetail.fromJson(jsonDecode(respon.body));
     } else {
       throw Exception(
-        Modelstorydetail.fromjson(jsonDecode(respon.body)).message,
+        Modelstorydetail.fromJson(jsonDecode(respon.body)).message,
       );
     }
   }

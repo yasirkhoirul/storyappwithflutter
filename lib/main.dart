@@ -46,7 +46,7 @@ void main() {
             auth: context.read<AuthProvider>(),
           ),
         ),
-        ChangeNotifierProvider(create: (context) => MapsProvider(Location())  ,)
+        ChangeNotifierProvider(create: (context) => MapsProvider(Location())),
       ],
       child: const MainApp(),
     ),

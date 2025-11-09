@@ -40,7 +40,9 @@ class _DetailScreenState extends State<DetailScreen> {
                       TextButton(
                         onPressed: () {
                           value.setidle();
-                          context.read<DetailProvider>().getdetaail(widget.id ?? "");
+                          context.read<DetailProvider>().getdetaail(
+                            widget.id ?? "",
+                          );
                         },
                         child: const Text("ok"),
                       ),
@@ -122,8 +124,10 @@ class _DetailScreenState extends State<DetailScreen> {
                                                 size: 25,
                                               ),
                                             ),
-                                            SizedBox(width: 10,),
-                                            Expanded(child: Text(value.addresss)),
+                                            SizedBox(width: 10),
+                                            Expanded(
+                                              child: Text(value.addresss),
+                                            ),
                                           ],
                                         ),
                                       ],
@@ -157,7 +161,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.fade,
                           ),
-                          Divider(height: 1,),
+                          Divider(height: 1),
                           Expanded(
                             flex: 3,
                             child: Padding(

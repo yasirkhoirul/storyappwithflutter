@@ -58,8 +58,7 @@ class _MapscreenState extends State<Mapscreen> {
                     },
 
                     onTap: (argument) async {
-                      
-                      value.addplacemark(argument,_googleMapController);
+                      value.addplacemark(argument, _googleMapController);
                       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                         showDialog(
                           barrierDismissible: false,
@@ -141,7 +140,7 @@ class AlerDialog extends StatelessWidget {
           TextButton(
             onPressed: () {
               state.setaddresempty();
-              
+
               Navigator.of(context).pop();
             },
             child: const Text("Batal"),
@@ -149,7 +148,6 @@ class AlerDialog extends StatelessWidget {
         ],
       ),
       _ => AlertDialog(
-
         title: const Text("Pilih Lokasi"),
         content: const CircularProgressIndicator(),
       ),
