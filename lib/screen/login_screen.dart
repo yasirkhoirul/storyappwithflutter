@@ -3,14 +3,17 @@ import 'package:provider/provider.dart';
 import 'package:story_app/data/model/modelauth.dart';
 import 'package:story_app/provider/auth_provider.dart';
 import 'package:story_app/provider/status_provider.dart';
+import 'package:story_app/router/myrouter_delegate.dart';
 
 class LoginScreen extends StatefulWidget {
-  final Function(LoginModel,BuildContext) signintap;
+  final Function(Status) status;
+  final Function(LoginModel, BuildContext) signintap;
   final void Function() signuptap;
   const LoginScreen({
     super.key,
     required this.signintap,
     required this.signuptap,
+    required this.status,
   });
 
   @override
@@ -30,13 +33,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _onstateschange() {
     final state = authProvider.status;
-
+    widget.status(state);
     switch (state) {
-      
       case Isuccesslogin(data: var data):
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           authProvider.setidlelogin();
-          widget.signintap(data,context);
+          widget.signintap(data, context);
         });
         break;
       default:
@@ -122,6 +124,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(height: 12),
                             OutlinedButton(
                               onPressed: () async {
+                                context.read<MyrouterDelegate>().showdialog =
+                                    true;
                                 await auth.setemail(email.text);
                                 await auth.setPassword(password.text);
                                 await auth.login();

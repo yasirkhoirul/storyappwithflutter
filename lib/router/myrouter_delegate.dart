@@ -83,8 +83,25 @@ class MyrouterDelegate extends RouterDelegate
             gomap = false;
             notifyListeners();
           },
+          onbuttontap: () {
+            showdialog = true;
+            notifyListeners();
+          },
+          ontapmap: (state) {
+            Logger().d("dipanggil listener map");
+            statuss = state;
+            notifyListeners();
+          },
         ),
         key: ValueKey("maps"),
+      ),
+    if (showdialog && statuss != null)
+      ShowDialogs(
+        onclose: () {
+          showdialog = false;
+          statuss = null;
+          notifyListeners();
+        },
       ),
   ];
   List<Page> get isnotlogin => [
@@ -94,10 +111,16 @@ class MyrouterDelegate extends RouterDelegate
         signintap: (data, context) async {
           islogin = true;
           isalreadylogin = authprovider.datalogin != null;
+          showdialog = false;
+          statuss = null;
           notifyListeners();
         },
         signuptap: () {
           gosignup = true;
+          notifyListeners();
+        },
+        status: (status) {
+          statuss = status;
           notifyListeners();
         },
       ),
@@ -116,6 +139,8 @@ class MyrouterDelegate extends RouterDelegate
             await authprovider.loadDatalogin();
             isalreadylogin = authprovider.datalogin != null;
             Logger().d("data lginnya $isalreadylogin");
+            statuss = null;
+            showdialog = false;
             notifyListeners();
           },
           status: (status) {

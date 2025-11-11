@@ -22,14 +22,13 @@ class ListStoryScreen extends StatefulWidget {
   State<ListStoryScreen> createState() => _ListStoryScreenState();
 }
 
-class _ListStoryScreenState extends State<ListStoryScreen> with RouteAware{
+class _ListStoryScreenState extends State<ListStoryScreen> with RouteAware {
   final ScrollController scrollcontroller = ScrollController();
   @override
   void dispose() {
     scrollcontroller.dispose();
     super.dispose();
   }
-  
 
   @override
   void initState() {

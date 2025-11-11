@@ -21,7 +21,7 @@ class StoryProvider extends ChangeNotifier {
 
   Status status = IsIdle();
 
-  setPageItemone(){
+  setPageItemone() {
     _pageitemlist = 1;
     notifyListeners();
   }

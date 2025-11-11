@@ -3,7 +3,6 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:story_app/provider/auth_provider.dart';
 import 'package:story_app/provider/status_provider.dart';
-import 'package:story_app/widget/dialog.dart';
 
 class SignupScreen extends StatefulWidget {
   final void Function(Status) status;
@@ -12,7 +11,8 @@ class SignupScreen extends StatefulWidget {
   const SignupScreen({
     super.key,
     required this.tapsignup,
-    required this.gosignin, required this.status,
+    required this.gosignin,
+    required this.status,
   });
 
   @override

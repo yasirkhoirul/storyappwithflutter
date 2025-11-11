@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:story_app/provider/detail_provider.dart';
 import 'package:story_app/provider/status_provider.dart';
@@ -56,52 +55,47 @@ class _DetailScreenState extends State<DetailScreen> {
                       (value.datas!.liststory.lat != null ||
                               value.datas!.liststory.long != null)
                           ? Expanded(
-                            child: Column(
-                              children: [
-                                Flexible(
-                                  child: SizedBox(
-                                    height: 400,
-                                    child: RepaintBoundary(
-                                      child: IgnorePointer(
-                                        ignoring: true,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadiusGeometry.circular(
-                                                12,
-                                              ),
-                                          child: Googlemap(
-                                            lat:
-                                                value.datas!.liststory.lat!,
-                                            lon: value
-                                                .datas!
-                                                .liststory
-                                                .long!,
+                              child: Column(
+                                children: [
+                                  Flexible(
+                                    child: SizedBox(
+                                      height: 400,
+                                      child: RepaintBoundary(
+                                        child: IgnorePointer(
+                                          ignoring: true,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadiusGeometry.circular(
+                                                  12,
+                                                ),
+                                            child: Googlemap(
+                                              lat: value.datas!.liststory.lat!,
+                                              lon: value.datas!.liststory.long!,
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                  children: [
-                                    Flexible(
-                                      child: Icon(
-                                        Icons.location_city,
-                                        size: 25,
+                                  SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Flexible(
+                                        child: Icon(
+                                          Icons.location_city,
+                                          size: 25,
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Expanded(child: Text(value.addresss)),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )
+                                      SizedBox(width: 10),
+                                      Expanded(child: Text(value.addresss)),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
                           : Container(),
                       SizedBox(height: 10),
                       Expanded(
@@ -128,12 +122,14 @@ class _DetailScreenState extends State<DetailScreen> {
                               ),
                               Text(
                                 value.datas!.liststory.name,
-                                style: Theme.of(context).textTheme.displayMedium,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.displayMedium,
                                 maxLines: 1,
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.fade,
                               ),
-                              SizedBox(height: 10,),
+                              SizedBox(height: 10),
                               Divider(height: 1),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),

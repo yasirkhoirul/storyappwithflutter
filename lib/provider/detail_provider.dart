@@ -45,22 +45,17 @@ class DetailProvider extends ChangeNotifier {
   getaddres() async {
     final listStory = datas?.liststory;
 
-  if (listStory == null ||
-      listStory.lat == null ||
-      listStory.long == null) {
-    
-    return;
-  }
+    if (listStory == null || listStory.lat == null || listStory.long == null) {
+      return;
+    }
     final lat = listStory.lat;
     final lon = listStory.long;
     try {
-      Logger().d("masuk get addres ${datas!.liststory.lat!
-            },${datas!.liststory.long!} ");
+      Logger().d(
+        "masuk get addres ${datas!.liststory.lat!},${datas!.liststory.long!} ",
+      );
       final info = await geo
-          .placemarkFromCoordinates(
-           lat!,
-            lon!,
-          )
+          .placemarkFromCoordinates(lat!, lon!)
           .timeout(Duration(seconds: 10));
       final place = info[0];
       final address =
@@ -74,5 +69,5 @@ class DetailProvider extends ChangeNotifier {
     } catch (e) {
       throw Exception("terjadi kesalhan $e");
     }
-   }
+  }
 }

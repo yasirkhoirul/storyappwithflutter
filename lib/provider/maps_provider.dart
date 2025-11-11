@@ -55,7 +55,7 @@ class MapsProvider extends ChangeNotifier {
       addmarker(latlang, () {
         gmaps.animateCamera(CameraUpdate.newLatLng(latlang));
       });
-      statuspick = Issuksesmessage(message: "berhasil");
+      statuspick = Issuksesmessage(message: "anda memilih $address");
     } on TimeoutException {
       statuspick = IsError("koneksi kurang stabil silahkan coba lagi");
     } on PlatformException {

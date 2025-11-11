@@ -6,8 +6,15 @@ import 'package:story_app/provider/maps_provider.dart';
 import 'package:story_app/provider/status_provider.dart';
 
 class Mapscreen extends StatefulWidget {
+  final Function(Status) ontapmap;
+  final Function() onbuttontap;
   final Function() onconfirm;
-  const Mapscreen({super.key, required this.onconfirm});
+  const Mapscreen({
+    super.key,
+    required this.onconfirm,
+    required this.ontapmap,
+    required this.onbuttontap,
+  });
 
   @override
   State<Mapscreen> createState() => _MapscreenState();
@@ -24,8 +31,24 @@ class _MapscreenState extends State<Mapscreen> {
 
   @override
   void initState() {
-    context.read<MapsProvider>().init();
+    final provider = context.read<MapsProvider>();
+    provider.init();
+    provider.addListener(listener);
     super.initState();
+  }
+
+  void listener() {
+    if (!context.mounted) return;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final provider = context.read<MapsProvider>();
+      final state = provider.statuspick;
+      widget.ontapmap(state);
+
+      if (state is IsError) {
+        provider.setaddresempty();
+        provider.clearmarker();
+      }
+    });
   }
 
   @override
@@ -59,13 +82,7 @@ class _MapscreenState extends State<Mapscreen> {
 
                     onTap: (argument) async {
                       value.addplacemark(argument, _googleMapController);
-                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                        showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (context) => AlerDialog(widget: widget),
-                        );
-                      });
+                      widget.onbuttontap();
                     },
                     initialCameraPosition: CameraPosition(
                       zoom: 18,
@@ -101,56 +118,56 @@ class _MapscreenState extends State<Mapscreen> {
   }
 }
 
-class AlerDialog extends StatelessWidget {
-  const AlerDialog({super.key, required this.widget});
+// class AlerDialog extends StatelessWidget {
+//   const AlerDialog({super.key, required this.widget});
 
-  final Mapscreen widget;
+//   final Mapscreen widget;
 
-  @override
-  Widget build(BuildContext context) {
-    final state = context.watch<MapsProvider>();
-    return switch (state.statuspick) {
-      IsError(message: var message) => AlertDialog(
-        title: const Text("Pilih Lokasi"),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () {
-              state.setaddresempty();
-              state.clearmarker();
-              Navigator.of(context).pop();
-            },
-            child: const Text("Ok"),
-          ),
-        ],
-      ),
-      Issuksesmessage() => AlertDialog(
-        title: const Text("Pilih Lokasi"),
-        content: Text(
-          "Anda yakin ingin memilih tempat ini? \n ${state.saddress}",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              widget.onconfirm();
-            },
-            child: const Text("YA"),
-          ),
-          TextButton(
-            onPressed: () {
-              state.setaddresempty();
+//   @override
+//   Widget build(BuildContext context) {
+//     final state = context.watch<MapsProvider>();
+//     return switch (state.statuspick) {
+//       IsError(message: var message) => AlertDialog(
+//         title: const Text("Pilih Lokasi"),
+//         content: Text(message),
+//         actions: [
+//           TextButton(
+//             onPressed: () {
+//               state.setaddresempty();
+//               state.clearmarker();
+//               Navigator.of(context).pop();
+//             },
+//             child: const Text("Ok"),
+//           ),
+//         ],
+//       ),
+//       Issuksesmessage() => AlertDialog(
+//         title: const Text("Pilih Lokasi"),
+//         content: Text(
+//           "Anda yakin ingin memilih tempat ini? \n ${state.saddress}",
+//         ),
+//         actions: [
+//           TextButton(
+//             onPressed: () {
+//               Navigator.of(context).pop();
+//               widget.onconfirm();
+//             },
+//             child: const Text("YA"),
+//           ),
+//           TextButton(
+//             onPressed: () {
+//               state.setaddresempty();
 
-              Navigator.of(context).pop();
-            },
-            child: const Text("Batal"),
-          ),
-        ],
-      ),
-      _ => AlertDialog(
-        title: const Text("Pilih Lokasi"),
-        content: const CircularProgressIndicator(),
-      ),
-    };
-  }
-}
+//               Navigator.of(context).pop();
+//             },
+//             child: const Text("Batal"),
+//           ),
+//         ],
+//       ),
+//       _ => AlertDialog(
+//         title: const Text("Pilih Lokasi"),
+//         content: const CircularProgressIndicator(),
+//       ),
+//     };
+//   }
+// }
