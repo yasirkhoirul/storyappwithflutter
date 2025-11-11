@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/web.dart';
 
 import 'package:story_app/provider/auth_provider.dart';
+import 'package:story_app/provider/status_provider.dart';
 import 'package:story_app/screen/detail_screen.dart';
 
 import 'package:story_app/screen/list_story_screen.dart';
@@ -9,6 +10,7 @@ import 'package:story_app/screen/login_screen.dart';
 import 'package:story_app/screen/mapscreen.dart';
 import 'package:story_app/screen/signup_screen.dart';
 import 'package:story_app/screen/upload_screen.dart';
+import 'package:story_app/widget/dialog.dart';
 
 class MyrouterDelegate extends RouterDelegate
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -29,6 +31,8 @@ class MyrouterDelegate extends RouterDelegate
   bool goupload = false;
   bool godetail = false;
   bool gomap = false;
+  Status? statuss;
+  bool showdialog = false;
   String? iddetail;
   bool isalreadylogin = false;
   List<Page> page = [];
@@ -87,7 +91,7 @@ class MyrouterDelegate extends RouterDelegate
     MaterialPage(
       key: ValueKey("loginscreen"),
       child: LoginScreen(
-        signintap: (data) async {
+        signintap: (data, context) async {
           islogin = true;
           isalreadylogin = authprovider.datalogin != null;
           notifyListeners();
@@ -103,6 +107,7 @@ class MyrouterDelegate extends RouterDelegate
         key: ValueKey("signup"),
         child: SignupScreen(
           tapsignup: () {
+            showdialog = true;
             notifyListeners();
           },
           gosignin: () async {
@@ -113,11 +118,24 @@ class MyrouterDelegate extends RouterDelegate
             Logger().d("data lginnya $isalreadylogin");
             notifyListeners();
           },
+          status: (status) {
+            statuss = status;
+            notifyListeners();
+          },
         ),
+      ),
+    if (showdialog && statuss != null)
+      ShowDialogs(
+        onclose: () {
+          showdialog = false;
+          statuss = null;
+          notifyListeners();
+        },
       ),
   ];
   @override
   Widget build(BuildContext context) {
+    Logger().d("ini adlaah status di route delegate $statuss");
     if (isalreadylogin) {
       page = isalreadylogon;
     } else {

@@ -23,7 +23,7 @@ DetailStory _$DetailStoryFromJson(Map<String, dynamic> json) => DetailStory(
   json['photoUrl'] as String,
   json['createdAt'] as String,
   (json['lat'] as num?)?.toDouble(),
-  (json['long'] as num?)?.toDouble(),
+  (json['lon'] as num?)?.toDouble(),
 );
 
 Modelstorydetail _$ModelstorydetailFromJson(Map<String, dynamic> json) =>

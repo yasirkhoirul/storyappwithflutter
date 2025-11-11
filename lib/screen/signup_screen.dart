@@ -6,12 +6,13 @@ import 'package:story_app/provider/status_provider.dart';
 import 'package:story_app/widget/dialog.dart';
 
 class SignupScreen extends StatefulWidget {
+  final void Function(Status) status;
   final void Function() tapsignup;
   final void Function() gosignin;
   const SignupScreen({
     super.key,
     required this.tapsignup,
-    required this.gosignin,
+    required this.gosignin, required this.status,
   });
 
   @override
@@ -37,15 +38,15 @@ class _SignupScreenState extends State<SignupScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!context.mounted) return;
       if (state is Isloading) {
-        showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) => const StatusDialogManager(),
-        );
+        widget.status(state);
       }
       if (state is Isuksessignup) {
+        widget.status(state);
         widget.gosignin();
         context.read<AuthProvider>().setidlelogin();
+      }
+      if (state is IsError) {
+        widget.status(state);
       }
     });
   }
@@ -148,6 +149,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 Logger().d(
                                   "tombol signup ditekan dengan ${email.text}",
                                 );
+                                widget.tapsignup();
                                 await value.signup(
                                   email.text,
                                   password.text,

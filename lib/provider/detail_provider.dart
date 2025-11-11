@@ -43,15 +43,23 @@ class DetailProvider extends ChangeNotifier {
   }
 
   getaddres() async {
-    if (datas?.liststory.lat == null || datas?.liststory.long == null) {
-      return;
-    }
+    final listStory = datas?.liststory;
+
+  if (listStory == null ||
+      listStory.lat == null ||
+      listStory.long == null) {
+    
+    return;
+  }
+    final lat = listStory.lat;
+    final lon = listStory.long;
     try {
-      Logger().d("masuk get addres ");
+      Logger().d("masuk get addres ${datas!.liststory.lat!
+            },${datas!.liststory.long!} ");
       final info = await geo
           .placemarkFromCoordinates(
-            datas!.liststory.lat!,
-            datas!.liststory.long!,
+           lat!,
+            lon!,
           )
           .timeout(Duration(seconds: 10));
       final place = info[0];
@@ -66,5 +74,5 @@ class DetailProvider extends ChangeNotifier {
     } catch (e) {
       throw Exception("terjadi kesalhan $e");
     }
-  }
+   }
 }

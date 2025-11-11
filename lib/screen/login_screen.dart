@@ -3,10 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:story_app/data/model/modelauth.dart';
 import 'package:story_app/provider/auth_provider.dart';
 import 'package:story_app/provider/status_provider.dart';
-import 'package:story_app/widget/dialog.dart';
 
 class LoginScreen extends StatefulWidget {
-  final Function(LoginModel) signintap;
+  final Function(LoginModel,BuildContext) signintap;
   final void Function() signuptap;
   const LoginScreen({
     super.key,
@@ -33,21 +32,11 @@ class _LoginScreenState extends State<LoginScreen> {
     final state = authProvider.status;
 
     switch (state) {
-      case Isloading():
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          if (!context.mounted) return;
-          showDialog(
-            barrierDismissible: false,
-            useRootNavigator: false,
-            context: context,
-            builder: (context) => StatusDialogManager(),
-          );
-        });
-        break;
+      
       case Isuccesslogin(data: var data):
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           authProvider.setidlelogin();
-          widget.signintap(data);
+          widget.signintap(data,context);
         });
         break;
       default:
