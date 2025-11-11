@@ -61,17 +61,13 @@ class _DetailScreenState extends State<DetailScreen> {
                                     child: SizedBox(
                                       height: 400,
                                       child: RepaintBoundary(
-                                        child: IgnorePointer(
-                                          ignoring: true,
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadiusGeometry.circular(
-                                                  12,
-                                                ),
-                                            child: Googlemap(
-                                              lat: value.datas!.liststory.lat!,
-                                              lon: value.datas!.liststory.long!,
-                                            ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadiusGeometry.circular(12),
+                                          child: Googlemap(
+                                            detail: value.addresss,
+                                            lat: value.datas!.liststory.lat!,
+                                            lon: value.datas!.liststory.long!,
                                           ),
                                         ),
                                       ),
@@ -160,14 +156,27 @@ class _DetailScreenState extends State<DetailScreen> {
 class Googlemap extends StatelessWidget {
   final double lat;
   final double lon;
-  const Googlemap({super.key, required this.lat, required this.lon});
+  final String detail;
+  const Googlemap({
+    super.key,
+    required this.lat,
+    required this.lon,
+    required this.detail,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
+      myLocationButtonEnabled: false,
+      myLocationEnabled: false,
+
       liteModeEnabled: true,
       markers: {
-        Marker(markerId: MarkerId("location"), position: LatLng(lat, lon)),
+        Marker(
+          infoWindow: InfoWindow(title: detail),
+          markerId: MarkerId("location"),
+          position: LatLng(lat, lon),
+        ),
       },
       zoomControlsEnabled: false,
       zoomGesturesEnabled: false,
